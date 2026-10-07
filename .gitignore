@@ -1,0 +1,8 @@
+# Secrets : seul .env.example est commité
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

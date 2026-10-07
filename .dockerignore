@@ -1,0 +1,23 @@
+# Tout ce qui n'a rien à faire dans l'image.
+
+# Secrets : le .env ne doit jamais être copié dans une couche
+.env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# Python : caches et environnement virtuel local
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Fichiers Docker et documentation : inutiles à l'exécution
+Dockerfile
+.dockerignore
+compose.yaml
+README.md
+RAPPORT.md

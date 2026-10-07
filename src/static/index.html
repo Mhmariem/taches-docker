@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestion de tâches</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; color: #1f2933; }
+    h1 { font-size: 1.5rem; }
+    form { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+    input { flex: 1; padding: .6rem; font-size: 1rem; border: 1px solid #9aa5b1; border-radius: 6px; }
+    button { padding: .6rem 1rem; font-size: 1rem; border: 0; border-radius: 6px; background: #1d4ed8; color: #fff; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid #e4e7eb; }
+    li.faite span { text-decoration: line-through; color: #7b8794; }
+    li button { background: #e4e7eb; color: #1f2933; font-size: .9rem; }
+    .vide { color: #7b8794; }
+  </style>
+</head>
+<body>
+  <h1>Gestion de tâches</h1>
+
+  <form id="formulaire">
+    <input id="titre" placeholder="Nouvelle tâche" required maxlength="200" aria-label="Titre de la tâche">
+    <button type="submit">Ajouter</button>
+  </form>
+
+  <ul id="liste"></ul>
+
+  <script>
+    const liste = document.getElementById("liste");
+    const formulaire = document.getElementById("formulaire");
+    const champ = document.getElementById("titre");
+
+    // Recharge la liste depuis l'API et la redessine
+    async function afficher() {
+      const taches = await (await fetch("/api/taches")).json();
+      liste.replaceChildren();
+      if (taches.length === 0) {
+        const li = document.createElement("li");
+        li.className = "vide";
+        li.textContent = "Aucune tâche pour l'instant.";
+        liste.append(li);
+      }
+      for (const t of taches) {
+        const li = document.createElement("li");
+        const texte = document.createElement("span");
+        texte.textContent = t.titre;      // textContent : pas d'injection HTML
+        li.append(texte);
+        if (t.faite) {
+          li.className = "faite";
+        } else {
+          const bouton = document.createElement("button");
+          bouton.textContent = "Marquer comme faite";
+          bouton.onclick = async () => {
+            await fetch(`/api/taches/${t.id}/faite`, { method: "PATCH" });
+            afficher();
+          };
+          li.append(bouton);
+        }
+        liste.append(li);
+      }
+    }
+
+    formulaire.onsubmit = async (e) => {
+      e.preventDefault();
+      await fetch("/api/taches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titre: champ.value }),
+      });
+      champ.value = "";
+      afficher();
+    };
+
+    afficher();
+  </script>
+</body>
+</html>

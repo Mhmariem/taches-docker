@@ -1,0 +1,56 @@
+name: taches
+
+services:
+
+  # Application web (API + page HTML), construite à partir du Dockerfile
+  web:
+    build: .
+    ports:
+      # hôte:conteneur, publié uniquement sur la machine locale
+      - "127.0.0.1:${WEB_PORT:-8000}:8000"
+    environment:
+      # La base est jointe par le NOM du service, résolu par le DNS interne de Compose
+      DB_HOST: db
+      DB_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        # Attendre que PostgreSQL accepte les connexions, pas seulement que le conteneur existe
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Base de données : aucun port publié, elle n'est joignable que depuis le réseau Compose
+  db:
+    image: postgres:17.6-bookworm
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?Copiez .env.example vers .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Copiez .env.example vers .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Copiez .env.example vers .env}
+    volumes:
+      # Volume nommé monté sur le répertoire de données de PostgreSQL 17 (PGDATA)
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      # $$ : la variable est lue dans le conteneur, pas remplacée par Compose
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # Troisième service : interface d'administration de la base
+  adminer:
+    image: adminer:5.3.0
+    ports:
+      - "127.0.0.1:${ADMINER_PORT:-8080}:8080"
+    environment:
+      # Pré-remplit le champ « Serveur » avec le nom du service de base
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  db_data:
