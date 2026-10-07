@@ -38,20 +38,20 @@ Elles sont lues dans le fichier `.env`, à créer à partir de `.env.example`.
 
 |Variable|Rôle|Valeur d'exemple|
 |-|-|-|
-|`POSTGRES\_DB`|Nom de la base créée au premier démarrage|`taches`|
-|`POSTGRES\_USER`|Utilisateur PostgreSQL utilisé par l'application|`taches`|
-|`POSTGRES\_PASSWORD`|Mot de passe de cet utilisateur|`changez-moi`|
-|`WEB\_PORT`|Port de l'application sur l'hôte (8000 par défaut)|`8000`|
-|`ADMINER\_PORT`|Port d'Adminer sur l'hôte (8081 par défaut)|`8081`|
+|`POSTGRES_DB`|Nom de la base créée au premier démarrage|`taches`|
+|`POSTGRES_USER`|Utilisateur PostgreSQL utilisé par l'application|`taches`|
+|`POSTGRES_PASSWORD`|Mot de passe de cet utilisateur|`changez-moi`|
+|`WEB_PORT`|Port de l'application sur l'hôte (8000 par défaut)|`8000`|
+|`ADMINER_PORT`|Port d'Adminer sur l'hôte (8081 par défaut)|`8081`|
 
-Les trois variables `POSTGRES\_\*` ne sont prises en compte qu'à la création de la base. Pour les changer ensuite, il faut repartir d'un volume vide (`docker compose down -v`).
+Les trois variables `POSTGRES_*` ne sont prises en compte qu'à la création de la base. Pour les changer ensuite, il faut repartir d'un volume vide (`docker compose down -v`).
 
 ## Commandes utiles
 
 ```bash
 docker compose logs -f web          # suivre les logs de l'application
 docker compose exec web bash        # ouvrir un shell dans le conteneur de l'application
-docker compose exec db sh -c 'psql -U "$POSTGRES\_USER" -d "$POSTGRES\_DB"'   # ouvrir psql dans la base
+docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'   # ouvrir psql dans la base
 docker compose down                 # tout arrêter, les données sont conservées
 docker compose down -v              # tout arrêter ET supprimer les données
 ```
