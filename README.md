@@ -51,7 +51,7 @@ Les trois variables `POSTGRES\_\*` ne sont prises en compte qu'à la création d
 ```bash
 docker compose logs -f web          # suivre les logs de l'application
 docker compose exec web bash        # ouvrir un shell dans le conteneur de l'application
-docker compose exec db sh -c 'psql -U "$POSTGRES\_USER" -d "$POSTGRES\_DB"'   # ouvrir psql dans la base
+docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'   # ouvrir psql dans la base
 docker compose down                 # tout arrêter, les données sont conservées
 docker compose down -v              # tout arrêter ET supprimer les données
 ```
