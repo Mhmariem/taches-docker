@@ -44,7 +44,7 @@ Elles sont lues dans le fichier `.env`, à créer à partir de `.env.example`.
 |`WEB_PORT`|Port de l'application sur l'hôte (8000 par défaut)|`8000`|
 |`ADMINER_PORT`|Port d'Adminer sur l'hôte (8081 par défaut)|`8081`|
 
-Les trois variables `POSTGRES\_\*` ne sont prises en compte qu'à la création de la base. Pour les changer ensuite, il faut repartir d'un volume vide (`docker compose down -v`).
+Les trois variables `POSTGRES_*` ne sont prises en compte qu'à la création de la base. Pour les changer ensuite, il faut repartir d'un volume vide (`docker compose down -v`).
 
 ## Commandes utiles
 
