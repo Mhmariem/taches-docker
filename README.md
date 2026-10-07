@@ -12,7 +12,7 @@ Vérification : `docker --version` et `docker compose version`.
 ## Démarrage
 
 ```bash
-git clone git push -u origin main
+git clone https://github.com/Mhmariem/taches-docker.git
 cd taches-docker
 cp .env.example .env
 docker compose up -d --build
